@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const autoprefixer = require('autoprefixer');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -6,8 +8,7 @@ module.exports = {
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js',
-        chunckFilename: '[id].js'
+        filename: '[name].[contenthash].js'
     },
     resolve: {
         extensions: ['.js', '.jsx']
@@ -49,6 +50,18 @@ module.exports = {
                 ]
             },
             {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: 'syle-loader'
+                    }, {
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'sass-loader'
+                    }
+                ]
+            },
+            {
                 test: /\.(png|jpe?g|gif)$/,
                 loader: 'url-loader?limit=8000&name=images/[name].[ext]'
             }
@@ -61,6 +74,24 @@ module.exports = {
             filename: 'index.html',
             inject: 'body',
             title: 'Caching'
-        })
-    ]
+        }),
+        new webpack.HashedModuleIdsPlugin()// This will keep the vendor chunk to have same version
+    ],
+    optimization: {
+        runtimeChunk: 'single', // Split out runtime code into separate chunk 
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[//\]node_modules[\\/]/, // Split out vendor code into separate chunk
+                    name: 'vendors',
+                    chunks: 'all'
+                },
+            commons: {
+                name: "commons", // Split code common to all chunks to its own chunk
+                chunks: "initial",
+                minChunks: 2
+            }
+            }
+        }
+    }
 }
