@@ -73,8 +73,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: __dirname + '/src/index.html',
             filename: 'index.html',
-            inject: 'body',
-            title: 'Caching'
+            inject: 'body'
         }),
         new webpack.HashedModuleIdsPlugin()// This will keep the vendor chunk to have same version
     ],

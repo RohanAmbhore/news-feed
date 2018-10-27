@@ -2,7 +2,7 @@ import React from 'react';
 
 const LeftPanel = (props) => {
     return (
-        <div>Left</div>
+        <div><center>Left</center></div>
     );
 }
 
